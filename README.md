@@ -33,7 +33,7 @@ The ENTRANCE-MANAGEMENT-SYSTEM is a C language-based program designed to streaml
 
 
 ```bash
- git clone <repository_url>
+ git clone https://github.com/heyitsprashant/Entrance-management-system
 
 ```
 3. Compile the Program: Navigate to the project directory and compile the program with the following command:
