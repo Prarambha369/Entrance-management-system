@@ -103,3 +103,13 @@ while(1)
     return 1;
 
     }
+
+//----printing character ch at n times ------
+
+void printChar(char ch,int n)
+{
+    while(n--)
+    {
+        putchar(ch);
+    }
+}
