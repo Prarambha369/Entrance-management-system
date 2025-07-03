@@ -75,3 +75,31 @@ while(1)
 	printChar('*',64);
     printf("\n\n\t\tEnter Your Option :--> ");
     scanf("%d",&option);
+
+
+        switch(option)
+        {
+            case 0: return 1;
+                    break;
+            case 1: add(fp);
+                    break;
+            case 2: modify(fp);
+                    break;
+            case 3: exam(fp);
+                    break;
+            case 4: displayList(fp);
+                    break;
+            case 5: searchRecord(fp);
+                    break;
+            case 6: sort(fp);
+    				break;
+            default: printf("\n\t\tYou Pressed wrong key");
+                      printf("\n\t\tProgram terminated");
+                      getch();
+                      exit(0);
+
+        }
+    }
+    return 1;
+
+    }
