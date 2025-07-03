@@ -48,3 +48,30 @@ if((fp=fopen("K:\\student.txt","rb+"))==NULL)
            return 0;
        }
 }
+
+printHead();
+printf("\n\n\t\tCREATED BY");
+printf("\n\n\t\tPRASHANT BASYAL");
+printf("\n\n\t\tPROJECT ON ENTRANCE MANAGEMENT SYSTEM");
+printf("\n\n\n\t\tpress any key to continue\n\t");
+printChar('-',64);
+getch();
+
+while(1)
+{
+    printHead();
+    printf("\n\t");
+    printChar(':',64);
+
+    printf("\n\n\t\t\t1. FORM FOR STUDENT");//ADD
+    printf("\n\n\t\t\t2. MODIFY STUDENT RECORD");
+    printf("\n\n\t\t\t3. ENTRANCE EXAMINATION");//MODIFY
+    printf("\n\n\t\t\t4. DISPLAY STUDENT RECORD");//DISPLAY
+    printf("\n\n\t\t\t5. SEARCH RECORD");// RECORD
+    printf("\n\n\t\t\t6. RANK OF STUDENTS");//SORTING OF RANK OF STUDENT
+    printf("\n\n\t\t\t0. EXIT");//TERMINATE THE PROGRAM
+    printf("\n\t");
+	printf("\n\t");
+	printChar('*',64);
+    printf("\n\n\t\tEnter Your Option :--> ");
+    scanf("%d",&option);
