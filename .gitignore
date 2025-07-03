@@ -54,3 +54,10 @@ dkms.conf
 # debug information files
 *.dwo
 !/.idea/
+/.idea/
+!/.idea/Entrance-management-system.iml
+!/.idea/vcs.xml
+!/.idea/workspace.xml
+!/.idea/modules.xml
+/au.py
+/file.c
