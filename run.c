@@ -17,3 +17,18 @@ void searchRecord(FILE *fp);//find a particular record
 void printChar(char ch,int n);//printing a character ch n times
 void printHead();//printing head line for each screen
 void sort(FILE *fp);//sorting
+
+struct Stud
+{
+    char name[100];
+    char dob[20];
+    char address[50];
+    int ID;
+    float Mark;
+    int n;
+    char ph[20];
+    char gname[100];
+    char email[100];
+    char gph[20];
+
+};
