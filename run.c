@@ -32,3 +32,19 @@ struct Stud
     char gph[20];
 
 };
+
+int main()
+{
+ FILE * fp;
+ Student s;
+int option;
+char another;
+
+if((fp=fopen("K:\\student.txt","rb+"))==NULL)
+{
+    if((fp=fopen("K:\\student.txt","wb+"))==NULL)
+       {
+           printf("can't open file");
+           return 0;
+       }
+}
