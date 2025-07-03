@@ -113,3 +113,74 @@ void printChar(char ch,int n)
         putchar(ch);
     }
 }
+
+//-----Printing Head Line of the program -----
+
+void printHead()
+{ system("cls");
+
+printf("\n\n\t");
+printChar('=',16);
+printf("[ENTRANCE] [MANAGEMENT] [SYSTEM]");
+printChar('=',16);
+printf("\n");
+}
+
+
+// ===========sorting====================================
+void sort(FILE * fp)
+{
+ printHead();
+   Student s;
+ int i,b,j,troll,siz=sizeof(s),a=0;
+ float tmark;
+ struct sort
+ {
+ 	int roll;
+ 	float mark;
+ }rank[a];
+
+    rewind(fp);
+    while((fread(&s,siz,1,fp))==1)
+    {
+        a+=1;
+    }
+	rewind(fp);
+	b=0;
+    while((fread(&s,siz,1,fp))==1)
+    {
+		rank[b].roll=s.ID;
+		rank[b].mark=s.Mark;
+     b+=1;
+    }
+
+      for (i=0;i<a;i++)
+    {
+    	for(j=0;j<a-1;j++)
+    	{
+    		if (rank[j].mark<rank[j+1].mark)
+    		{
+    			tmark=rank[j].mark;
+    			rank[j].mark=rank[j+1].mark;
+    			rank[j+1].mark=tmark;
+
+    			troll=rank[j].roll;
+    			rank[j].roll=rank[j+1].roll;
+    			rank[j+1].roll=troll;
+			}
+				}
+	}
+	printf("\n\n\t");
+	printChar('*',75);
+	printf("\n\n\t\tRanking\t\t\tRoll No.\t\t\tMarks\n");
+	for (i=0;i<a;i++)
+	{
+		if (rank[i].mark>=3)
+		printf("\n\t\t%d\t\t\t%d\t\t\t%f",i+1,rank[i].roll,rank[i].mark);
+	}
+	printf("\n\n\t");
+	printChar('~',75);
+    	getch();
+
+  }
+
