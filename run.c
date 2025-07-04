@@ -297,3 +297,26 @@ void exam(FILE *fp)
 	fflush(stdin);
     another=getch();
 
+  if (another=='y'||another=='Y')
+   {
+    printf("\n\n\tEnter Identification Number of Student: ");
+    scanf("%d",&tempRoll);
+    rewind(fp);
+    while((fread(&s,siz,1,fp))==1)
+    {
+    if(s.ID==tempRoll&& s.n==0)
+        {
+		flag=1;
+        break;
+        }
+    }
+     if (flag==1)
+      {countr=0.0;
+      int i,m;
+     bool arr[10]={0};
+     int A[10];
+     // srand(time(NULL));
+     time_t t;
+     srand((unsigned)time(&t));
+
+
