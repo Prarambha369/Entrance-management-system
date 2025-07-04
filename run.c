@@ -362,3 +362,32 @@ void exam(FILE *fp)
 			getch();
 			goto a1;
 		}
+
+			case 2:
+                    system("cls");
+        		a2:
+        		printf("\n\n\n\tQ.Two and two _____ four.");
+        		printf("\n\n\n\t(A) makes \t\t\t(B) make \n\t(C) have made \t\t\t(D) will be made ");
+        		// ans a
+        		cha=getch();
+        		if (cha=='a'||cha=='A')
+        		{
+        			countr++;
+        			break;
+        		}
+        		else if(cha=='s'||cha=='S')
+        		{
+        			countr=countr+0;
+        			break;
+        		}
+        				else if(cha=='c'||cha=='C'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
+        		{
+        			countr-=.1;
+        			break;
+        		}
+        		else{
+        			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+        			getch();
+        			goto a2;
+        		}
+
