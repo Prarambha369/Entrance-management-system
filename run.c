@@ -320,3 +320,16 @@ void exam(FILE *fp)
      srand((unsigned)time(&t));
 
 
+  for (i=0;i<10;i++)
+    {int r = rand()%10;
+    if(!arr[r])
+    A[i]= r;
+    else
+    i--;
+    arr[r]=1;
+     }
+
+      for(i=0;i<10;i++)
+        {
+                //system("cls");
+                     // A[i]=i;
