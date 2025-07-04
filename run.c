@@ -184,3 +184,83 @@ void sort(FILE * fp)
 
   }
 
+// ==========FILLING STUDENT FORM==========================
+
+void add(FILE * fp)
+
+{
+printHead();
+
+char another='y';
+Student s;
+fseek(fp,0,SEEK_END);
+ printf("\n\n\n");
+    printf("\t\t");
+    printChar('~',85);
+    puts("\n\t\t*POINTS TO REMEMBER WHILE FILLING FORM");
+    puts("\n\t\ti.  One should pay proper attention while filling the form.");
+	puts("\n\t\tii. phone number and identification document number should be numeric (<10) i.e charcter");
+	puts("\n\t\t    from 0 to 9.");
+	puts("\n\t\tiii.one should remember their identification document number as it is the key factor");
+	puts("\n\t\t    for other steps  ");
+	puts("\n\t\tiv. one can modify their form record in modify portion with plenty of rs 500");
+	puts("\n\t\tv.  identification document number should be last exam symbol number or ");
+	puts("\n\t\t    citizenship number without any special sign(eg-,/_)  ");
+	printf("\t\t");
+	printChar('~',85);
+	printf("\n\n\n");
+	getch();
+	printHead();
+while(another=='y'||another=='Y')
+{
+
+    printf("\n\n\t\tEnter Full Name of Student:\t");
+    fflush(stdin);
+    fgets(s.name,100,stdin);
+    s.name[strlen(s.name)-1]='\0';
+
+    printf("\n\n\t\tEnter date of birth of Student:\t");
+    fflush(stdin);
+    fgets(s.dob,20,stdin);
+    s.dob[strlen(s.dob)-1]='\0';
+
+    printf("\n\n\t\tEnter Address:\t");
+    fflush(stdin);
+    fgets(s.address,50,stdin);
+    s.address[strlen(s.address)-1]='\0';
+
+    printf("\n\n\t\tIdentification document no: \t");
+    scanf("%d",&s.ID);
+
+	s.Mark=0;
+	s.n=0;
+
+    printf("\n\n\t\tEnter student phone number:\t");
+    fflush(stdin);
+    fgets(s.ph,20,stdin);
+    s.ph[strlen(s.ph)-1]='\0';
+
+
+  printf("\n\n\t\tEnter email ID Student:\t");
+    fflush(stdin);
+    fgets(s.email,100,stdin);
+    s.email[strlen(s.email)-1]='\0';
+
+
+    printf("\n\n\t\tEnter guardian name of Student:\t");
+    fflush(stdin);
+    fgets(s.gname,100,stdin);
+    s.gname[strlen(s.gname)-1]='\0';
+
+
+    printf("\n\n\t\tEnter student's guardian phone number:\t");
+    fflush(stdin);
+    fgets(s.gph,20,stdin);
+    s.gph[strlen(s.gph)]='\0';
+
+    fwrite(&s,sizeof(s),1,fp);
+    printf("\n\n\t\tWant to enter another student info (Y/N)\t");
+    fflush(stdin);
+    another=getche();
+}
+}
