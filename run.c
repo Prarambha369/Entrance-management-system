@@ -391,3 +391,29 @@ void exam(FILE *fp)
         			goto a2;
         		}
 
+	    case 3:
+                system("cls");
+		a3:
+		printf("\n\n\n\t\tQ.pH of 0.2 N H2SO4 is:");
+		printf("\n\n\n\t(A) 0.69 \t\t\t(B) 1.2 \n\t(C) 0.76 \t\t\t(D) 0.56");
+		// ans a
+		cha=getch();
+		if (cha=='a'||cha=='A')
+		{
+			countr++;
+			break;
+		}		else if(cha=='c'||cha=='C'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
+		{
+			countr-=.1;
+			break;
+		}
+		else if(cha=='s'||cha=='S')
+		{
+			countr=countr+0;
+			break;
+		}
+		else{
+			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+			getch();
+			goto a3;
+		}
