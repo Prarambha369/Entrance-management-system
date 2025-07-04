@@ -333,3 +333,32 @@ void exam(FILE *fp)
         {
                 //system("cls");
                      // A[i]=i;
+
+
+     switch(A[i])
+     {
+		case 1:
+		a1:
+		    system("cls");
+		printf("\n\n\n\tQ.The word �engineer� has its primary stress on its ______ syllable:\n");
+		printf("\n\n\t(A) first \t\t(B) second \n\t(C) third \t\t(D) fourth");
+		//ans c
+		cha=getch();
+		if (cha=='c'||cha=='C')
+		{
+			countr++;
+			break;
+		}		else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
+		{
+			countr-=.1;
+			break;
+		}else if(cha=='s'||cha=='S')
+		{
+			countr=countr+0;
+			break;
+		}
+		else{
+			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+			getch();
+			goto a1;
+		}
