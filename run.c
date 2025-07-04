@@ -264,3 +264,36 @@ while(another=='y'||another=='Y')
     another=getche();
 }
 }
+
+
+//===================ENTRANCE EXAMINATION===============
+void exam(FILE *fp)
+{
+    printHead();
+    int tempRoll,flag,siz,r;
+    Student s;
+    float countr;
+    char another,cha;
+    siz=sizeof(s);
+    fseek(fp,0,SEEK_END);
+    printf("\n\n\n");
+    printf("\t\t");
+    printChar('~',85);
+    puts("\n\t\t*POINTS TO REMEMBER WHILE GIVING EXAMINATION ");
+    puts("\n\t\ti.   One should enter their identification document number to began the entrance exam.");
+	puts("\n\t\tii.  Entrance is taken for 20 minute having total 10 marks.");
+	puts("\n\t\tiii. Examinee can skip any question by pressing's' ");
+	puts("\n\t\tiv.  Once skipped questions cant be reattemped.");
+	puts("\n\t\tv.   It consist of 10 question each having 1 marks.");
+	puts("\n\t\tvi.  There is the negative marking of 10% marks per each wrong answer.");
+	puts("\n\t\tvii. Once the answer is submitted cannot be recorrected.");
+	puts("\n\t\tviii.Total score is displayed when all the answer are submitted.");
+	printf("\t\t");
+	printChar('~',85);
+	printf("\n\n\n");
+	getch();
+	printHead();
+    printf("\n\n\t\t Do you want to take exam  (Y/N)\t");
+	fflush(stdin);
+    another=getch();
+
