@@ -491,3 +491,30 @@ void exam(FILE *fp)
 			getch();
 			goto a6;
 		}
+		  case 7:
+                    system("cls");
+                    a7:
+        		printf("\n\n\n\tQ.The second derivative of f(x) = 1/x at point (1,1) is equal to:");
+        		printf("\n\n\t(A) 1 \t\t\t(B) -1 \n\t(C) 2 \t\t\t(D) -2");
+        		//ans c
+        		cha=getch();
+        		if (cha=='c'||cha=='C')
+        		{
+        			countr++;
+        			break;
+        		}
+        		else if(cha=='s'||cha=='S')
+        		{
+        			countr=countr+0;
+        			break;
+        		}
+        				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
+        		{
+        			countr-=.1;
+        			break;
+        		}
+        		else{
+        			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+        			getch();
+        			goto a7;
+        		}
