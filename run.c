@@ -8,15 +8,15 @@
 #include<ctype.h>
 #define Student struct Stud
 
-void add(FILE * fp); //to add to list
-void exam(FILE *fp);//for entrance examination
+void add(FILE * fp);
+void exam(FILE *fp);
 void show_record();
-void modify(FILE * fp);//to modify a record
-void displayList(FILE * fp);//display whole list
-void searchRecord(FILE *fp);//find a particular record
-void printChar(char ch,int n);//printing a character ch n times
-void printHead();//printing head line for each screen
-void sort(FILE *fp);//sorting
+void modify(FILE * fp);
+void displayList(FILE * fp);
+void searchRecord(FILE *fp);
+void printChar(char ch,int n);
+void printHead();
+void sort(FILE *fp);
 
 struct Stud
 {
@@ -104,8 +104,6 @@ while(1)
 
     }
 
-//----printing character ch at n times ------
-
 void printChar(char ch,int n)
 {
     while(n--)
@@ -113,8 +111,6 @@ void printChar(char ch,int n)
         putchar(ch);
     }
 }
-
-//-----Printing Head Line of the program -----
 
 void printHead()
 { system("cls");
@@ -127,7 +123,6 @@ printf("\n");
 }
 
 
-// ===========sorting====================================
 void sort(FILE * fp)
 {
  printHead();
@@ -184,7 +179,6 @@ void sort(FILE * fp)
 
   }
 
-// ==========FILLING STUDENT FORM==========================
 
 void add(FILE * fp)
 
@@ -265,8 +259,6 @@ while(another=='y'||another=='Y')
 }
 }
 
-
-//===================ENTRANCE EXAMINATION===============
 void exam(FILE *fp)
 {
     printHead();
@@ -417,3 +409,58 @@ void exam(FILE *fp)
 			getch();
 			goto a3;
 		}
+
+			case 4:
+            system("cls");
+            a4:
+		printf("\n\n\n \tQ.Catalytic oxidation of ammonia in air forms:");
+		printf("\n\n\n\t(A)NO2 \t\t\t(B) N2O5 \n\t(C) N2O \t\t(D) NO");
+		//ans d
+		cha=getch();
+		if (cha=='d'||cha=='D')
+		{
+			countr++;
+			break;
+		}
+		else if(cha=='s'||cha=='S')
+		{
+			countr=countr+0;
+			break;
+		}		else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
+		{
+			countr-=.1;
+			break;
+		}
+		else{
+			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+			getch();
+			goto a4;
+		}
+		case 5:
+
+        		    system("cls");
+        		    a5:
+        		printf("\n\n\n\t\tQ.The magnetism of the magnet is due to:");
+        		printf("\n\n\n\t(A) the spin motion of electron \n\t\t(B) cosmic ray \n\t(C) the earth \n\t\t(D) pressure of big magnet inside the earth ");
+        		//ans a
+        		cha=getch();
+        		if (cha=='a'||cha=='A')
+        		{
+        			countr++;
+        			break;
+
+        		}else if(cha=='s'||cha=='S')
+        		{
+        			countr=countr+0;
+        			break;
+        		}
+        				else if(cha=='d'||cha=='D'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
+        		{
+        			countr-=.1;
+        			break;
+        		}
+        		else{
+        			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+        			getch();
+        			goto a5;
+        		}
