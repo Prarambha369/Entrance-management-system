@@ -737,3 +737,19 @@ void displayList(FILE * fp)
     printf("\n\n\t");
     system("pause");
 }
+void searchRecord(FILE *fp)
+{
+    printHead();
+
+int tempRoll,flag,siz,i;
+Student s;
+char another='y';
+
+siz=sizeof(s);
+
+while(another=='y'||another=='Y')
+  {
+  printf("\n\n\tEnter Identification Number of Student to search the record : ");
+  scanf("%d",&tempRoll);
+
+rewind(fp);
