@@ -545,3 +545,31 @@ void exam(FILE *fp)
                 			getch();
                 			goto a8;
                 		}
+                		case 9:
+                                    system("cls");
+                                    a9:
+                        		printf("\n\n\n\tQ.:If the line 2x+3y+4+k(-x+y+5)=0 is horizontal then the value of k is:");
+                        		printf("\n\n\t(A) 0 \t\t\t(B) 1 \n\t(C) 3 \t\t\t(D) 2");
+                        		//ans d
+                        		cha=getch();
+                        		if (cha=='d'||cha=='D')
+                        		{
+                        			countr++;
+                        			break;
+                        		}
+                        		else if(cha=='s'||cha=='S')
+                        		{
+                        			countr=countr+0;
+                        			break;
+                        		}
+                        				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
+                        		{
+                        			countr-=.1;
+                        			break;
+                        		}
+                        		else{
+                        			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+                        			getch();
+                        			goto a9;
+                        		}
+
