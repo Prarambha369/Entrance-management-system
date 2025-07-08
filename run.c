@@ -573,3 +573,51 @@ void exam(FILE *fp)
                         			goto a9;
                         		}
 
+case 10:
+            system("cls");
+            a10:
+		printf("\n\n\t\tQ.:IUPAC name of CH3-CH2 - CH2 -CH (OCH3) - CO Br is:");
+		printf("\n\t(A) 2- methoxylpentanoyl bromide \t\t\t\t(B) 3- methoxylpentanoyl bromide \n\t\t\t\t(C) 3-methoxyhexanoyl bromide \t\t(D) 2-methoxyhexanoyl bromide");
+		//ans a
+		cha=getch();
+		if (cha=='a'||cha=='A')
+		{
+			countr++;
+			break;
+		}
+		else if(cha=='s'||cha=='S')
+		{
+			countr=countr+0;
+			break;
+		}
+				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
+		{
+			countr-=.1;
+			break;
+		}
+		else{
+			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+			getch();
+			goto a10;
+		}
+
+		} //s.ID;
+    }
+     fflush(stdin);
+						//to hold marks
+	 rewind(fp);
+while((fread(&s,siz,1,fp))==1)
+{
+    if(s.ID==tempRoll)
+        {
+		  flag=1;
+          break;
+        }
+}
+if(flag==1)
+    {
+    fseek(fp,-siz,SEEK_CUR);
+    s.Mark=countr;
+	s.n=1;
+    fwrite(&s,sizeof(s),1,fp);
+}
