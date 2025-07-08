@@ -621,3 +621,16 @@ if(flag==1)
 	s.n=1;
     fwrite(&s,sizeof(s),1,fp);
 }
+  system("cls");
+	 printf("\n\n\n\n\t\t\tCongratulations %s you scored=%f\n",s.name,s.Mark);
+     printf("\t\t\tBest of luck for result\n");
+	 printf("\t\t\tpress any key to go homepage\t");
+    fflush(stdin);
+    }
+   else
+    {
+        printf("\n\t\t\t EITHER YOU HAVENOT REGISTER YET OR YOU HAVE ALREADY GIVEN EXAM\n");
+    }
+   getch();
+   }
+}
