@@ -464,3 +464,30 @@ void exam(FILE *fp)
         			getch();
         			goto a5;
         		}
+   case 6:
+            system("cls");
+            a6:
+		printf("\n\n\n\tQ.The maximum percentage of ingredients in cement is that of:");
+		printf("\n\n\t(A) magnesia \t\t(B) lime \n\t(C) alumina \t\t(D) silica");
+		//ans b
+		cha=getch();
+		if (cha=='b'||cha=='B')
+		{
+			countr++;
+			break;
+		}
+		else if(cha=='s'||cha=='S')
+		{
+			countr=countr+0;
+			break;
+		}
+				else if(cha=='a'||cha=='A'||cha=='d'||cha=='D'||cha=='c'||cha=='C')
+		{
+			countr-=.1;
+			break;
+		}
+		else{
+			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+			getch();
+			goto a6;
+		}
