@@ -681,4 +681,32 @@ if(flag==1)
     fgets(s.ph,20,stdin);
     s.ph[strlen(s.ph)-1]='\0';
 
+ printf("\n\n\t\tEnter email ID Student\t");
+    fflush(stdin);
+    fgets(s.email,100,stdin);
+    s.email[strlen(s.email)-1]='\0';
+
+
+    printf("\n\n\t\tEnter guardian name of Student\t");
+    fflush(stdin);
+    fgets(s.gname,100,stdin);
+    s.gname[strlen(s.gname)-1]='\0';
+
+
+    printf("\n\n\t\tEnter student's guardian phone number\t");
+    fflush(stdin);
+    fgets(s.gph,20,stdin);
+    s.gph[strlen(s.gph)]='\0';
+    fwrite(&s,sizeof(s),1,fp);
+}
+
+else
+{
+	printf("\n\n\t!!!! ERROR !!!! RECORD NOT FOUND");
+}
+
+printf("\n\n\t");
+system("pause");
+
+}
 
