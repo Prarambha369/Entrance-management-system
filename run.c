@@ -753,3 +753,31 @@ while(another=='y'||another=='Y')
   scanf("%d",&tempRoll);
 
 rewind(fp);
+
+while((fread(&s,siz,1,fp))==1)
+{
+    if(s.ID==tempRoll)
+        {flag=1;
+        break;
+        }
+}
+if(flag==1)
+    {
+        printf("\n\t\tNAME : %s",s.name);
+        printf("\n\t\tDATE OF BIRTH:%s",s.dob);
+        printf("\n\t\tADDRESS: %s",s.address);
+        printf("\n\t\tIDENTICATION DOCUMENT NO.: %d",s.ID);
+        printf("\n\t\tPHONE NUMBER:%s",s.ph);
+        printf("\n\t\tGURDAIN NAME:%s",s.gname);
+        printf("\n\t\tEMAIL OF STUDENT:%s",s.email);
+        printf("\n\t\tGURDAIN PHONE NUMBER:%s",s.gph);
+
+     }
+else printf("\n\n\t\t!!!! ERROR RECORD NOT FOUND !!!!");
+printf("\n");
+printChar('~',65);
+printf("\n\n\t\tWant to enter another search (Y/N)");
+fflush(stdin);
+another=getch();
+  }
+}
