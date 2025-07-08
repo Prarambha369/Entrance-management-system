@@ -518,3 +518,30 @@ void exam(FILE *fp)
         			getch();
         			goto a7;
         		}
+        		case 8:
+                            system("cls");
+                            a8:
+                		printf("\n\n\n\tQ.Which of the following is a logic gates? ");
+                		printf("\n\n\tA.PUT\t\tB.THEN\n\tC.NOR\t\tD.WHEN\n");
+                		//ans c
+                		cha=getch();
+                		if (cha=='c'||cha=='C')
+                		{
+                			countr++;
+                			break;
+                		}
+                		else if(cha=='s'||cha=='S')
+                		{
+                			countr=countr+0;
+                			break;
+                		}
+                				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
+                		{
+                			countr-=.1;
+                			break;
+                		}
+                		else{
+                			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
+                			getch();
+                			goto a8;
+                		}
