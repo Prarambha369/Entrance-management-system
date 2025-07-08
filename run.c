@@ -709,4 +709,31 @@ printf("\n\n\t");
 system("pause");
 
 }
+void displayList(FILE * fp)
+{   printHead();
+    Student s;
+    int i,siz=sizeof(s);
 
+    rewind(fp);
+
+    while((fread(&s,siz,1,fp))==1)
+    {
+        printf("\n\t\tNAME : %s",s.name);
+        printf("\n\t\tDATE OF BIRTH:%s",s.dob);
+        printf("\n\t\tADDRESS: %s",s.address);
+        printf("\n\t\tIDENTIFICATION DOCUMENT NO.:%d",s.ID);
+        printf("\n\t\tPHONE NUMBER:%s",s.ph);
+		if (s.n!=0)
+		printf("\n\t\tmark :%f",s.Mark);
+        printf("\n\t\tGURDAIN NAME:%s",s.gname);
+        printf("\n\t\tEMAIL ADDRESS OF STUDENT:%s",s.email);
+        printf("\n\t\tGURDAIN PHONE NUMBER:%s",s.gph);
+		printf("\n\n\t\t");
+		printChar('x',40);
+		printf("\n\n");
+    }
+    printf("\n\n\n\t");
+     printChar('*',65);
+    printf("\n\n\t");
+    system("pause");
+}
