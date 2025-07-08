@@ -634,3 +634,51 @@ if(flag==1)
    getch();
    }
 }
+void modify(FILE * fp)
+{
+printHead();
+
+Student s;
+int i,flag=0,tempRoll,siz=sizeof(s);
+float cgpa;
+printf("\n\n\t Precaution:one shouldn't enter a string character while entering ID number");
+printf("\n\n\tEnter  identification document  Number of Student to MODIFY the Record : ");
+scanf("%d",&tempRoll);
+
+rewind(fp);
+
+while((fread(&s,siz,1,fp))==1)
+{
+    if(s.ID==tempRoll)
+        {flag=1;
+        break;
+        }
+}
+
+if(flag==1)
+    {
+    fseek(fp,-siz,SEEK_CUR);
+    printf("\n\n\t\tRECORD FOUND");
+    printf("\n\n\t\tEnter New Data for the Record");
+
+    printf("\n\n\t\tEnter Full Name of Student\t");
+    fflush(stdin);
+    fgets(s.name,100,stdin);
+    s.name[strlen(s.name)-1]='\0';
+
+    printf("\n\n\t\tEnter date of birth of Student\t");
+    fflush(stdin);
+    fgets(s.dob,20,stdin);
+    s.dob[strlen(s.dob)-1]='\0';
+
+    printf("\n\n\t\tEnter Address\t");
+    fflush(stdin);
+    fgets(s.address,50,stdin);
+    s.address[strlen(s.address)-1]='\0';
+
+    printf("\n\n\t\tEnter student phone number\t");
+    fflush(stdin);
+    fgets(s.ph,20,stdin);
+    s.ph[strlen(s.ph)-1]='\0';
+
+
