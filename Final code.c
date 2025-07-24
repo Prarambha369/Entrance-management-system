@@ -1,3 +1,8 @@
+/*
+ * ENTRANCE MANAGEMENT SYSTEM
+ * Functions for managing student entrance exams, records, and results
+ */
+
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -8,15 +13,15 @@
 #include<ctype.h>
 #define Student struct Stud
 
-void add(FILE * fp); //to add to list
-void exam(FILE *fp);//for entrance examination
+void add(FILE * fp);
+void exam(FILE *fp);
 void show_record();
-void modify(FILE * fp);//to modify a record
-void displayList(FILE * fp);//display whole list
-void searchRecord(FILE *fp);//find a particular record
-void printChar(char ch,int n);//printing a character ch n times
-void printHead();//printing head line for each screen
-void sort(FILE *fp);//sorting
+void modify(FILE * fp);
+void displayList(FILE * fp);
+void searchRecord(FILE *fp);
+void printChar(char ch,int n);
+void printHead();
+void sort(FILE *fp);
 
 struct Stud
 {
@@ -52,7 +57,7 @@ if((fp=fopen("K:\\student.txt","rb+"))==NULL)
 
 printHead();
 printf("\n\n\t\tCREATED BY");
-printf("\n\n\t\tPRASHANT BASYAL");
+printf("\n\n\t\tPrarambha Bashyal");
 printf("\n\n\t\tPROJECT ON ENTRANCE MANAGEMENT SYSTEM");
 printf("\n\n\n\t\tpress any key to continue\n\t");
 printChar('-',64);
@@ -105,8 +110,7 @@ return 1;
 
 }
 
-//----printing character ch at n times ------
-
+/* Print Character Helper */
 void printChar(char ch,int n)
 {
     while(n--)
@@ -115,8 +119,7 @@ void printChar(char ch,int n)
     }
 }
 
-//-----Printing Head Line of the program -----
-
+/* Print Program Header */
 void printHead()
 { system("cls");
 
@@ -127,7 +130,7 @@ printChar('=',16);
 printf("\n");
 }
 
-// ===========sorting====================================
+/* Student Ranking System */
 void sort(FILE * fp)
 {
  printHead();
@@ -184,9 +187,7 @@ void sort(FILE * fp)
 
   }
 
-
-// ==========FILLING STUDENT FORM==========================
-
+/* Student Registration Form */
 void add(FILE * fp)
 
 {
@@ -266,7 +267,7 @@ while(another=='y'||another=='Y')
 }
 }
 
-//===================ENTRANCE EXAMINATION===============
+/* Entrance Examination System */
 void exam(FILE *fp)
 {
     printHead();
@@ -656,8 +657,7 @@ if(flag==1)
    }
 }
 
-//===========MODIFY A RECORD ===========================
-
+/* Student Record Modification */
 void modify(FILE * fp)
 {
 printHead();
@@ -735,7 +735,7 @@ system("pause");
 
 }
 
-//====================DISPLAY THE LIST =================
+/* Display Student Records */
 void displayList(FILE * fp)
 {   printHead();
     Student s;
@@ -764,7 +764,8 @@ void displayList(FILE * fp)
     printf("\n\n\t");
     system("pause");
 }
-//====================SEARCH =================
+
+/* Search Student Records */
 void searchRecord(FILE *fp)
 {
     printHead();
