@@ -14,7 +14,8 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/input_utils.c \
        $(SRC_DIR)/logger.c \
        $(SRC_DIR)/system_utils.c \
-       $(SRC_DIR)/panels.c
+       $(SRC_DIR)/panels.c \
+       $(SRC_DIR)/exam.c
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
 # Executable name

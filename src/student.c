@@ -41,8 +41,8 @@ void search_student(FILE *fp) {
         printf("\n\t\t--------------");
         
         while (fread(&s, sizeof(Student), 1, fp) == 1) {
-            if (s.ID == search_id) {
-                display_student_details(&s);
+            if (s.id == search_id) {
+                show_student_details(&s);
                 found = true;
                 break;
             }
@@ -67,7 +67,7 @@ void search_student(FILE *fp) {
         
         while (fread(&s, sizeof(Student), 1, fp) == 1) {
             if (strcasecmp(s.name, search_name) == 0) {
-                display_student_details(&s);
+                show_student_details(&s);
                 found = true;
             }
         }
@@ -82,164 +82,112 @@ void search_student(FILE *fp) {
 }
 
 // Display student details
-void display_student_details(Student *s) {
+void show_student_details(const Student *s) {
     if (!s) return;
     
-    printf("\n\n\t\tStudent ID: %d", s->ID);
+    printf("\n\n\t\tStudent ID: %d", s->id);
     printf("\n\t\tName: %s", s->name);
     printf("\n\t\tDate of Birth: %s", s->dob);
     printf("\n\t\tEmail: %s", s->email);
     printf("\n\t\tPhone: %s", s->phone);
-    printf("\n\t\tGuardian: %s (%s)", s->guardian_name, s->guardian_phone);
+    printf("\n\t\tParent: %s (%s)", s->parent_name, s->parent_phone);
     printf("\n\t\tAddress: %s", s->address);
-    
-    if (s->has_taken_exam) {
-        printf("\n\t\tExam Status: Taken (Score: %.2f)", s->mark);
-    } else {
-        printf("\n\t\tExam Status: Not taken yet");
-    }
+    printf("\n\t\tEducation: %s", s->education);
+    printf("\n\t\tSchool: %s", s->school);
+    printf("\n\t\tGrade: %s, Section: %s", s->grade, s->section);
+    printf("\n\t\tStatus: %s", s->is_active ? "Active" : "Inactive");
+    printf("\n\t\tRegistered: %s", ctime(&s->created_at));
 }
 
 // Add a new student
-void add_student(FILE *fp) {
-    if (!fp) return;
-    
-    Student s;
-    memset(&s, 0, sizeof(Student));
-    
-    print_header();
-    printf("\n\n\t\tADD NEW STUDENT");
-    printf("\n\t\t---------------");
-    
-    // Get student details
-    printf("\n\n\t\tEnter Student Details:");
-    printf("\n\t\t---------------------");
-    
-    // Get ID
-    printf("\n\t\tID: ");
-    if (scanf("%d", &s.ID) != 1) {
-        clear_input_buffer();
-        printf("\n\t\tInvalid ID format!");
-        printf("\n\t\tPress any key to continue...");
-        getch();
-        return;
+bool add_student(Student *student) {
+    if (!student) return false;
+
+    FILE *fp = fopen(STUDENT_FILE, "ab+");
+    if (!fp) {
+        log_message(LOG_ERROR, "Failed to open student file for writing");
+        return false;
     }
-    clear_input_buffer();
-    
+
     // Check if ID already exists
-    rewind(fp);
     Student temp;
+    rewind(fp);
     while (fread(&temp, sizeof(Student), 1, fp) == 1) {
-        if (temp.ID == s.ID) {
-            printf("\n\t\tStudent with ID %d already exists!", s.ID);
-            printf("\n\t\tPress any key to continue...");
-            getch();
-            return;
+        if (temp.id == student->id) {
+            fclose(fp);
+            log_message(LOG_WARNING, "Student with ID %d already exists", student->id);
+            return false;
         }
     }
     
-    // Get other details
-    printf("\t\tName: ");
-    safe_input(s.name, sizeof(s.name));
-    
-    printf("\t\tDate of Birth (YYYY-MM-DD): ");
-    safe_input(s.dob, sizeof(s.dob));
-    
-    do {
-        printf("\t\tEmail: ");
-        safe_input(s.email, sizeof(s.email));
-    } while (!validate_email(s.email));
-    
-    do {
-        printf("\t\tPhone: ");
-        safe_input(s.phone, sizeof(s.phone));
-    } while (!validate_phone(s.phone));
-    
-    printf("\t\tGuardian Name: ");
-    safe_input(s.guardian_name, sizeof(s.guardian_name));
-    
-    do {
-        printf("\t\tGuardian Phone: ");
-        safe_input(s.guardian_phone, sizeof(s.guardian_phone));
-    } while (!validate_phone(s.guardian_phone));
-    
-    printf("\t\tAddress: ");
-    safe_input(s.address, sizeof(s.address));
-    
-    // Set default values
-    s.has_taken_exam = 0;
-    s.mark = 0.0f;
-    s.registration_date = time(NULL);
-    s.has_user_account = false;
-    
-    // Generate QR code
-    generate_qr_code(&s);
-    
+    // Set metadata
+    student->is_active = true;
+    student->created_at = time(NULL);
+    student->updated_at = student->created_at;
+    student->created_by = current_user.ID;  // Fixed field name to match User struct
+
     // Write to file
     fseek(fp, 0, SEEK_END);
-    if (fwrite(&s, sizeof(Student), 1, fp) == 1) {
-        printf("\n\n\t\tStudent added successfully!");
+    bool success = (fwrite(student, sizeof(Student), 1, fp) == 1);
+    fclose(fp);
+
+    if (success) {
+        log_message(LOG_INFO, "Added new student: %s (ID: %d)", student->name, student->id);
     } else {
-        printf("\n\n\t\tError adding student!");
+        log_message(LOG_ERROR, "Failed to add student: %s", student->name);
     }
     
-    printf("\n\t\tPress any key to continue...");
-    getch();
+    return success;
 }
 
-// Generate QR code for student
-void generate_qr_code(Student *s) {
-    if (!s) return;
-    
-    // Simple implementation - in a real app, use a QR code library
-    snprintf(s->qr_code, MAX_QR_DATA, "STUDENT_%d_%s", s->ID, s->name);
+// Generate QR code for student ID card
+bool generate_qr_code(const char *data, const char *filename) {
+    if (!data || !filename) return false;
+
+    // In a real implementation, this would use a QR code library
+    // For now, just create a text file with the data
+    FILE *fp = fopen(filename, "w");
+    if (!fp) return false;
+
+    fprintf(fp, "QR CODE DATA: %s\n", data);
+    fclose(fp);
+
+    return true;
 }
 
-// Display QR code (placeholder implementation)
-void display_qr_code(const char *qr_data) {
-    if (!qr_data) return;
-    
-    printf("\n\t\tQR Code Data: %s", qr_data);
-    printf("\n\t\t[QR CODE IMAGE WOULD BE DISPLAYED HERE]");
-}
+// Check in a student using their QR code
+bool check_in_with_qr(const char *qr_data) {
+    if (!qr_data || strlen(qr_data) == 0) {
+        log_message(LOG_WARNING, "Empty QR code data provided");
+        return false;
+    }
 
-// QR Code check-in
-void check_in_with_qr(FILE *fp) {
-    if (!fp) return;
-    
-    print_header();
-    printf("\n\n\t\tQR CODE CHECK-IN");
-    printf("\n\t\t----------------");
-    
-    char qr_data[MAX_QR_DATA];
-    printf("\n\n\t\tScan QR Code or Enter Code: ");
-    safe_input(qr_data, sizeof(qr_data));
-    
-    if (strlen(qr_data) == 0) {
-        printf("\n\t\tNo QR code data provided!");
-        printf("\n\t\tPress any key to continue...");
-        getch();
-        return;
+    FILE *fp = fopen(STUDENT_FILE, "rb");
+    if (!fp) {
+        log_message(LOG_ERROR, "Failed to open student file for QR check-in");
+        return false;
     }
     
-    rewind(fp);
     Student s;
     bool found = false;
-    
+    char student_qr[MAX_QR_DATA];
+
     while (fread(&s, sizeof(Student), 1, fp) == 1) {
-        if (strcmp(s.qr_code, qr_data) == 0) {
-            printf("\n\n\t\tSTUDENT CHECKED IN SUCCESSFULLY!");
-            printf("\n\t\t-------------------------------");
-            display_student_details(&s);
+        // Use safer snprintf with size limit and check return value
+        int len = snprintf(student_qr, MAX_QR_DATA, "STUDENT_%d_%.50s", s.id, s.name);
+        if (len < 0 || len >= MAX_QR_DATA) {
+            log_message(LOG_ERROR, "QR code generation failed: buffer too small");
+            continue;
+        }
+
+        if (strcmp(student_qr, qr_data) == 0) {
             found = true;
+            show_student_details(&s);
+            log_message(LOG_INFO, "Student checked in: %s (ID: %d)", s.name, s.id);
             break;
         }
     }
     
-    if (!found) {
-        printf("\n\t\tNo student found with the provided QR code!");
-    }
-    
-    printf("\n\n\t\tPress any key to continue...");
-    getch();
+    fclose(fp);
+    return found;
 }
