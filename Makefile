@@ -7,8 +7,14 @@ LDFLAGS = -lm
 SRC_DIR = src
 BUILD_DIR = build
 
-# Source files (add new .c files here as we create them)
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+# Source files
+SRCS = $(SRC_DIR)/main.c \
+       $(SRC_DIR)/user.c \
+       $(SRC_DIR)/student.c \
+       $(SRC_DIR)/input_utils.c \
+       $(SRC_DIR)/logger.c \
+       $(SRC_DIR)/system_utils.c \
+       $(SRC_DIR)/panels.c
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
 # Executable name
