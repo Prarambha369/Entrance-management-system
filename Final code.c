@@ -3,15 +3,56 @@
  * Functions for managing student entrance exams, records, and results
  */
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<math.h>
-#include<stdbool.h>
-#include<time.h>
-#include<conio.h>
-#include<ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+#include <time.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <termios.h>
+
 #define Student struct Stud
+
+// Linux implementation of getch() and getche()
+char getch() {
+    char buf = 0;
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0)
+        perror("tcsetattr()");
+    old.c_lflag &= ~ICANON;
+    old.c_lflag &= ~ECHO;
+    old.c_cc[VMIN] = 1;
+    old.c_cc[VTIME] = 0;
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr ICANON");
+    if (read(0, &buf, 1) < 0)
+        perror("read()");
+    old.c_lflag |= ICANON;
+    old.c_lflag |= ECHO;
+    if (tcsetattr(0, TCSADRAIN, &old) < 0)
+        perror("tcsetattr ~ICANON");
+    return (buf);
+}
+
+char getche() {
+    char buf = 0;
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0)
+        perror("tcsetattr()");
+    old.c_lflag &= ~ICANON;
+    old.c_cc[VMIN] = 1;
+    old.c_cc[VTIME] = 0;
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr ICANON");
+    if (read(0, &buf, 1) < 0)
+        perror("read()");
+    old.c_lflag |= ICANON;
+    if (tcsetattr(0, TCSADRAIN, &old) < 0)
+        perror("tcsetattr ~ICANON");
+    return (buf);
+}
 
 void add(FILE * fp);
 void exam(FILE *fp);
@@ -22,6 +63,8 @@ void searchRecord(FILE *fp);
 void printChar(char ch,int n);
 void printHead();
 void sort(FILE *fp);
+void welcomeAnimation();
+void exitAnimation();
 
 struct Stud
 {
@@ -31,6 +74,7 @@ struct Stud
     int ID;
     float Mark;
     int n;
+    int rank;  // student's rank after exam results
     char ph[20];
     char gname[100];
     char email[100];
@@ -41,20 +85,23 @@ struct Stud
 
 int main()
 {
- FILE * fp;
- Student s;
-int option;
-char another;
+    FILE * fp;
+    Student s;
+    int option;
+    char another;
 
-if((fp=fopen("K:\\student.txt","rb+"))==NULL)
-{
-    if((fp=fopen("K:\\student.txt","wb+"))==NULL)
-       {
-           printf("can't open file");
-           return 0;
-       }
-}
+    if((fp=fopen("data/student.dat","rb+"))==NULL)
+    {
+        // Create data directory if it doesn't exist
+        system("mkdir -p data");
+        if((fp=fopen("data/student.dat","wb+"))==NULL)
+        {
+            printf("Can't create data file\n");
+            return 0;
+        }
+    }
 
+    welcomeAnimation();
 printHead();
 printf("\n\n\t\tCREATED BY");
 printf("\n\n\t\tPrarambha Bashyal");
@@ -81,11 +128,14 @@ while(1)
 	printChar('*',64);
     printf("\n\n\t\tEnter Your Option :--> ");
     scanf("%d",&option);
-
+    // Clear input buffer to prevent leftover newline from affecting getch
+    int c; while ((c = getchar()) != '\n' && c != EOF);
 
     switch(option)
     {
-        case 0: return 1;
+        case 0:
+            exitAnimation();
+            return 1;
                 break;
         case 1: add(fp);
                 break;
@@ -121,7 +171,7 @@ void printChar(char ch,int n)
 
 /* Print Program Header */
 void printHead()
-{ system("cls");
+{ system("clear");
 
 printf("\n\n\t");
 printChar('=',16);
@@ -133,59 +183,91 @@ printf("\n");
 /* Student Ranking System */
 void sort(FILE * fp)
 {
- printHead();
-   Student s;
- int i,b,j,troll,siz=sizeof(s),a=0;
- float tmark;
- struct sort
- {
- 	int roll;
- 	float mark;
- }rank[a];
+    printHead();
+    Student s;
+    int siz=sizeof(s);
+    int count = 0;
 
+    // First count exam-taken records only
     rewind(fp);
-    while((fread(&s,siz,1,fp))==1)
-    {
-        a+=1;
-    }
-	rewind(fp);
-	b=0;
-    while((fread(&s,siz,1,fp))==1)
-    {
-		rank[b].roll=s.ID;
-		rank[b].mark=s.Mark;
-     b+=1;
+    while(fread(&s, siz, 1, fp) == 1) {
+        if(s.n != 0) count++;
     }
 
-      for (i=0;i<a;i++)
-    {
-    	for(j=0;j<a-1;j++)
-    	{
-    		if (rank[j].mark<rank[j+1].mark)
-    		{
-    			tmark=rank[j].mark;
-    			rank[j].mark=rank[j+1].mark;
-    			rank[j+1].mark=tmark;
+    // Create dynamic array based on count
+    struct {
+        int roll;
+        float mark;
+        char name[100];
+    } *rank = malloc(count * sizeof(*rank));
 
-    			troll=rank[j].roll;
-    			rank[j].roll=rank[j+1].roll;
-    			rank[j+1].roll=troll;
-			}
-				}
-	}
-	printf("\n\n\t");
-	printChar('*',75);
-	printf("\n\n\t\tRanking\t\t\tRoll No.\t\t\tMarks\n");
-	for (i=0;i<a;i++)
-	{
-		if (rank[i].mark>=3)
-		printf("\n\t\t%d\t\t\t%d\t\t\t%f",i+1,rank[i].roll,rank[i].mark);
-	}
-	printf("\n\n\t");
-	printChar('~',75);
-    	getch();
+    if (!rank) {
+        printf("\n\n\t\tError: Not enough memory!");
+        return;
+    }
 
-  }
+    // Read only exam-taken records into array
+    rewind(fp);
+    int i = 0;
+    while(fread(&s, siz, 1, fp) == 1) {
+        if(s.n != 0) {
+            rank[i].roll = s.ID;
+            rank[i].mark = s.Mark;
+            strncpy(rank[i].name, s.name, sizeof(rank[i].name));
+            rank[i].name[sizeof(rank[i].name)-1] = '\0';
+            i++;
+        }
+    }
+
+    // Sort the records
+    for(i = 0; i < count; i++) {
+        for(int j = 0; j < count-1; j++) {
+            if(rank[j].mark < rank[j+1].mark) {
+                float tmark = rank[j].mark;
+                rank[j].mark = rank[j+1].mark;
+                rank[j+1].mark = tmark;
+
+                int troll = rank[j].roll;
+                rank[j].roll = rank[j+1].roll;
+                rank[j+1].roll = troll;
+            }
+        }
+    }
+
+    // Display results
+    printf("\n\n\t");
+    printChar('*',75);
+    printf("\n\n\t\tRank\tName\t\t\tRoll No.\tMarks\n");
+    for(i = 0; i < count; i++) {
+        printf("\n\t\t%d\t %-15s %d\t\t%.2f", i+1, rank[i].name, rank[i].roll, rank[i].mark);
+    }
+    printf("\n\n\t");
+    printChar('~',75);
+    printf("\n\n\t\tPress Enter to continue...");
+    getchar();
+    getchar();
+
+    // Free allocated memory
+    // free(rank); // defer freeing until after updating file
+
+    // update each student's rank in file
+    rewind(fp);
+    for(int k=0; k<count; k++) {
+        rewind(fp);
+        Student tmp;
+        while(fread(&tmp, siz, 1, fp) == 1) {
+            if(tmp.ID == rank[k].roll) {
+                tmp.rank = k+1;
+                fseek(fp, -siz, SEEK_CUR);
+                fwrite(&tmp, siz, 1, fp);
+                break;
+            }
+        }
+    }
+
+   // Now free the rank array
+   free(rank);
+}
 
 /* Student Registration Form */
 void add(FILE * fp)
@@ -236,6 +318,7 @@ while(another=='y'||another=='Y')
 
 	s.Mark=0;
 	s.n=0;
+    s.rank=0;
 
     printf("\n\n\t\tEnter student phone number:\t");
     fflush(stdin);
@@ -271,390 +354,298 @@ while(another=='y'||another=='Y')
 void exam(FILE *fp)
 {
     printHead();
-    int tempRoll,flag,siz,r;
     Student s;
-    float countr;
-    char another,cha;
-    siz=sizeof(s);
-    fseek(fp,0,SEEK_END);
-    printf("\n\n\n");
-    printf("\t\t");
+    int tempRoll, flag = 0;
+    int siz = sizeof(s);
+    float countr = 0.0;
+    char another, cha;
+
+    printf("\n\n\n\t\t");
     printChar('~',85);
     puts("\n\t\t*POINTS TO REMEMBER WHILE GIVING EXAMINATION ");
-    puts("\n\t\ti.   One should enter their identification document number to began the entrance exam.");
-	puts("\n\t\tii.  Entrance is taken for 20 minute having total 10 marks.");
-	puts("\n\t\tiii. Examinee can skip any question by pressing's' ");
-	puts("\n\t\tiv.  Once skipped questions cant be reattemped.");
-	puts("\n\t\tv.   It consist of 10 question each having 1 marks.");
-	puts("\n\t\tvi.  There is the negative marking of 10% marks per each wrong answer.");
-	puts("\n\t\tvii. Once the answer is submitted cannot be recorrected.");
-	puts("\n\t\tviii.Total score is displayed when all the answer are submitted.");
-	printf("\t\t");
-	printChar('~',85);
-	printf("\n\n\n");
-	getch();
-	printHead();
-    printf("\n\n\t\t Do you want to take exam  (Y/N)\t");
-	fflush(stdin);
-    another=getch();
+    puts("\n\t\ti.   Enter your ID number to start the exam");
+    puts("\n\t\tii.  Total duration: 20 minutes");
+    puts("\n\t\tiii. Total marks: 10 (1 mark per question)");
+    puts("\n\t\tiv.  Press 'S' to skip a question");
+    puts("\n\t\tv.   Negative marking: -0.1 for wrong answers");
+    puts("\n\t\tvi.  Results will be shown immediately");
+    printf("\t\t");
+    printChar('~',85);
+    printf("\n\n\n\tPress any key to continue...");
+    getch();
 
-    if (another=='y'||another=='Y')
-   {
-    printf("\n\n\tEnter Identification Number of Student: ");
-    scanf("%d",&tempRoll);
+    system("clear");
+    printf("\n\n\tEnter your ID Number to start the exam: ");
+    scanf("%d", &tempRoll);
+
+    // Check if student exists and hasn't taken exam
+    flag = 0;
     rewind(fp);
-    while((fread(&s,siz,1,fp))==1)
+    while(fread(&s, siz, 1, fp) == 1)
     {
-    if(s.ID==tempRoll&& s.n==0)
+        if(s.ID == tempRoll && s.n == 0)
         {
-		flag=1;
-        break;
+            flag = 1;
+            break;
         }
     }
-     if (flag==1)
-      {countr=0.0;
-      int i,m;
-     bool arr[10]={0};
-     int A[10];
-     // srand(time(NULL));
-     time_t t;
-     srand((unsigned)time(&t));
 
-   for (i=0;i<10;i++)
-    {int r = rand()%10;
-    if(!arr[r])
-    A[i]= r;
+    if(flag == 1)
+    {
+        system("clear");
+        printf("\n\n\tWelcome %s to the Linux Basic Knowledge Test!", s.name);
+        printf("\n\tPress any key when you're ready to begin...");
+        getch();
+
+        for(int i = 0; i < 10; i++)
+        {
+            system("clear");
+            printf("\n\n\tQuestion %d of 10\n", i + 1);
+            printChar('-', 50);
+
+            switch(i)
+            {
+                case 0:
+                    printf("\n\n\tQ1. What command is used to list files in Linux?\n");
+                    printf("\n\t(A) dir\t\t(B) ls\n\t(C) show\t(D) list\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'b' || cha == 'B') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was B) ls");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 1:
+                    printf("\n\n\tQ2. Which directory contains system configuration files in Linux?\n");
+                    printf("\n\t(A) /bin\t\t(B) /home\n\t(C) /etc\t(D) /root\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'c' || cha == 'C') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was C) /etc");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 2:
+                    printf("\n\n\tQ3. What command is used to change permissions in Linux?\n");
+                    printf("\n\t(A) chmod\t(B) chown\n\t(C) perm\t(D) allow\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'a' || cha == 'A') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was A) chmod");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 3:
+                    printf("\n\n\tQ4. Which command shows running processes?\n");
+                    printf("\n\t(A) show\t(B) procs\n\t(C) ps\t\t(D) tasks\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'c' || cha == 'C') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was C) ps");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 4:
+                    printf("\n\n\tQ5. What is the correct command to create a directory?\n");
+                    printf("\n\t(A) makedir\t(B) create\n\t(C) md\t\t(D) mkdir\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'd' || cha == 'D') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was D) mkdir");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 5:
+                    printf("\n\n\tQ6. Which command is used to view file contents?\n");
+                    printf("\n\t(A) cat\t\t(B) show\n\t(C) view\t(D) read\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'a' || cha == 'A') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was A) cat");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 6:
+                    printf("\n\n\tQ7. What is the root user's UID in Linux?\n");
+                    printf("\n\t(A) 100\t\t(B) 1\n\t(C) 0\t\t(D) 999\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'c' || cha == 'C') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was C) 0");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 7:
+                    printf("\n\n\tQ8. Which command is used to find files in Linux?\n");
+                    printf("\n\t(A) search\t(B) locate\n\t(C) find\t(D) where\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'c' || cha == 'C') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was C) find");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 8:
+                    printf("\n\n\tQ9. What command shows disk usage?\n");
+                    printf("\n\t(A) du\t\t(B) disk\n\t(C) usage\t(D) df\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'a' || cha == 'A') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was A) du");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+
+                case 9:
+                    printf("\n\n\tQ10. Which command is used to extract a tar archive?\n");
+                    printf("\n\t(A) unzip\t(B) extract\n\t(C) tar -x\t(D) untar\n");
+                    printf("\n\tYour answer (A/B/C/D or S to skip): ");
+                    fflush(stdin);
+                    cha = getch();
+                    printf("%c", cha);
+                    if(cha == 'c' || cha == 'C') {
+                        printf("\n\n\tCorrect!");
+                        countr++;
+                    } else if(cha == 's' || cha == 'S') {
+                        printf("\n\n\tQuestion skipped.");
+                    } else if(cha != '\n') {
+                        printf("\n\n\tIncorrect! The correct answer was C) tar -x");
+                        countr -= 0.1;
+                    }
+                    printf("\n\n\tPress any key to continue...");
+                    getch();
+                    break;
+            }
+        }
+
+        // Update student's marks
+        rewind(fp);
+        while(fread(&s, siz, 1, fp) == 1)
+        {
+            if(s.ID == tempRoll)
+            {
+                fseek(fp, -siz, SEEK_CUR);
+                s.Mark = countr;
+                s.n = 1;  // Mark exam as taken
+                fwrite(&s, sizeof(s), 1, fp);
+                break;
+            }
+        }
+
+        // Show results
+        system("clear");
+        printf("\n\n\n\n\t\t\t╔════════════════════════════════╗\n");
+        printf("\t\t\t║          EXAM RESULTS          ║\n");
+        printf("\t\t\t╠════════════════════════════════╣\n");
+        printf("\t\t\t║ Name : %-23s║\n", s.name);
+        printf("\t\t\t║ Score: %-23.2f║\n", countr);
+        printf("\t\t\t╚════════════════════════════════╝\n");
+
+        if(countr >= 7.0)
+            printf("\n\t\t\tExcellent performance!");
+        else if(countr >= 5.0)
+            printf("\n\t\t\tGood job!");
+        else
+            printf("\n\t\t\tKeep practicing!");
+
+        printf("\n\n\t\t\tPress any key to continue...");
+        getch();
+    }
     else
-    i--;
-    arr[r]=1;
-     }
-
-      for(i=0;i<10;i++)
-        {
-                //system("cls");
-                     // A[i]=i;
-
-     switch(A[i])
-     {
-		case 1:
-		a1:
-		    system("cls");
-		printf("\n\n\n\tQ.The word �engineer� has its primary stress on its ______ syllable:\n");
-		printf("\n\n\t(A) first \t\t(B) second \n\t(C) third \t\t(D) fourth");
-		//ans c
-		cha=getch();
-		if (cha=='c'||cha=='C')
-		{
-			countr++;
-			break;
-		}		else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
-		{
-			countr-=.1;
-			break;
-		}else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a1;
-		}
-
-
-		case 2:
-            system("cls");
-		a2:
-		printf("\n\n\n\tQ.Two and two _____ four.");
-		printf("\n\n\n\t(A) makes \t\t\t(B) make \n\t(C) have made \t\t\t(D) will be made ");
-		// ans a
-		cha=getch();
-		if (cha=='a'||cha=='A')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='c'||cha=='C'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a2;
-		}
-
-
-		    case 3:
-                system("cls");
-		a3:
-		printf("\n\n\n\t\tQ.pH of 0.2 N H2SO4 is:");
-		printf("\n\n\n\t(A) 0.69 \t\t\t(B) 1.2 \n\t(C) 0.76 \t\t\t(D) 0.56");
-		// ans a
-		cha=getch();
-		if (cha=='a'||cha=='A')
-		{
-			countr++;
-			break;
-		}		else if(cha=='c'||cha=='C'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
-		{
-			countr-=.1;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a3;
-		}
-
-
-			case 4:
-            system("cls");
-            a4:
-		printf("\n\n\n \tQ.Catalytic oxidation of ammonia in air forms:");
-		printf("\n\n\n\t(A)NO2 \t\t\t(B) N2O5 \n\t(C) N2O \t\t(D) NO");
-		//ans d
-		cha=getch();
-		if (cha=='d'||cha=='D')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}		else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a4;
-		}
-
-
-		case 5:
-
-		    system("cls");
-		    a5:
-		printf("\n\n\n\t\tQ.The magnetism of the magnet is due to:");
-		printf("\n\n\n\t(A) the spin motion of electron \n\t\t(B) cosmic ray \n\t(C) the earth \n\t\t(D) pressure of big magnet inside the earth ");
-		//ans a
-		cha=getch();
-		if (cha=='a'||cha=='A')
-		{
-			countr++;
-			break;
-
-		}else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='d'||cha=='D'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a5;
-		}
-
-
-        case 6:
-            system("cls");
-            a6:
-		printf("\n\n\n\tQ.The maximum percentage of ingredients in cement is that of:");
-		printf("\n\n\t(A) magnesia \t\t(B) lime \n\t(C) alumina \t\t(D) silica");
-		//ans b
-		cha=getch();
-		if (cha=='b'||cha=='B')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='a'||cha=='A'||cha=='d'||cha=='D'||cha=='c'||cha=='C')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a6;
-		}
-
-
-        case 7:
-            system("cls");
-            a7:
-		printf("\n\n\n\tQ.The second derivative of f(x) = 1/x at point (1,1) is equal to:");
-		printf("\n\n\t(A) 1 \t\t\t(B) -1 \n\t(C) 2 \t\t\t(D) -2");
-		//ans c
-		cha=getch();
-		if (cha=='c'||cha=='C')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a7;
-		}
-
-
-		case 8:
-            system("cls");
-            a8:
-		printf("\n\n\n\tQ.Which of the following is a logic gates? ");
-		printf("\n\n\tA.PUT\t\tB.THEN\n\tC.NOR\t\tD.WHEN\n");
-		//ans c
-		cha=getch();
-		if (cha=='c'||cha=='C')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='d'||cha=='D')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a8;
-		}
-
-
-		case 9:
-            system("cls");
-            a9:
-		printf("\n\n\n\tQ.:If the line 2x+3y+4+k(-x+y+5)=0 is horizontal then the value of k is:");
-		printf("\n\n\t(A) 0 \t\t\t(B) 1 \n\t(C) 3 \t\t\t(D) 2");
-		//ans d
-		cha=getch();
-		if (cha=='d'||cha=='D')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a9;
-		}
-
-
-		case 10:
-            system("cls");
-            a10:
-		printf("\n\n\t\tQ.:IUPAC name of CH3-CH2 - CH2 -CH (OCH3) - CO Br is:");
-		printf("\n\t(A) 2- methoxylpentanoyl bromide \t\t\t\t(B) 3- methoxylpentanoyl bromide \n\t\t\t\t(C) 3-methoxyhexanoyl bromide \t\t(D) 2-methoxyhexanoyl bromide");
-		//ans a
-		cha=getch();
-		if (cha=='a'||cha=='A')
-		{
-			countr++;
-			break;
-		}
-		else if(cha=='s'||cha=='S')
-		{
-			countr=countr+0;
-			break;
-		}
-				else if(cha=='a'||cha=='A'||cha=='b'||cha=='B'||cha=='c'||cha=='C')
-		{
-			countr-=.1;
-			break;
-		}
-		else{
-			printf("\n\n\n\n\t\t\t\t<error in choosing option:>");
-			getch();
-			goto a10;
-		}
-
-		} //s.ID;
-    }
-     fflush(stdin);
-						//to hold marks
-	 rewind(fp);
-while((fread(&s,siz,1,fp))==1)
-{
-    if(s.ID==tempRoll)
-        {
-		  flag=1;
-          break;
-        }
-}
-if(flag==1)
     {
-    fseek(fp,-siz,SEEK_CUR);
-    s.Mark=countr;
-	s.n=1;						       //to check exam given or not
-    fwrite(&s,sizeof(s),1,fp);
-}
-
-     system("cls");
-	 printf("\n\n\n\n\t\t\tCongratulations %s you scored=%f\n",s.name,s.Mark);
-     printf("\t\t\tBest of luck for result\n");
-	 printf("\t\t\tpress any key to go homepage\t");
-    fflush(stdin);
+        printf("\n\n\t\tError: Either you haven't registered or you've already taken the exam!");
+        printf("\n\t\tPress any key to continue...");
+        getch();
     }
-   else
-    {
-        printf("\n\t\t\t EITHER YOU HAVENOT REGISTER YET OR YOU HAVE ALREADY GIVEN EXAM\n");
-    }
-   getch();
-   }
 }
 
 /* Student Record Modification */
@@ -731,13 +722,15 @@ else
 }
 
 printf("\n\n\t");
-system("pause");
-
+printf("Press Enter to continue...");
+getchar();
+getchar();
 }
 
 /* Display Student Records */
 void displayList(FILE * fp)
-{   printHead();
+{
+    printHead();
     Student s;
     int i,siz=sizeof(s);
 
@@ -745,68 +738,130 @@ void displayList(FILE * fp)
 
     while((fread(&s,siz,1,fp))==1)
     {
-        printf("\n\t\tNAME : %s",s.name);
-        printf("\n\t\tDATE OF BIRTH:%s",s.dob);
-        printf("\n\t\tADDRESS: %s",s.address);
-        printf("\n\t\tIDENTIFICATION DOCUMENT NO.:%d",s.ID);
-        printf("\n\t\tPHONE NUMBER:%s",s.ph);
-		if (s.n!=0)
-		printf("\n\t\tmark :%f",s.Mark);
-        printf("\n\t\tGURDAIN NAME:%s",s.gname);
-        printf("\n\t\tEMAIL ADDRESS OF STUDENT:%s",s.email);
-        printf("\n\t\tGURDAIN PHONE NUMBER:%s",s.gph);
-		printf("\n\n\t\t");
-		printChar('x',40);
-		printf("\n\n");
+        printf("\n\t\tNAME            : %s", s.name);
+        printf("\n\t\tDATE OF BIRTH   : %s", s.dob);
+        printf("\n\t\tADDRESS         : %s", s.address);
+        printf("\n\t\tID NUMBER       : %d", s.ID);
+        printf("\n\t\tPHONE NUMBER    : %s", s.ph);
+        if (s.n!=0) {
+            printf("\n\t\tMARKS          : %.2f", s.Mark);
+            printf("\n\t\tRANK           : %d", s.rank);
+        }
+        printf("\n\t\tGUARDIAN NAME   : %s", s.gname);
+        printf("\n\t\tEMAIL ADDRESS   : %s", s.email);
+        printf("\n\t\tGUARDIAN PHONE  : %s", s.gph);
+        printf("\n\n\t\t");
+        printChar('x',40);
+        printf("\n");
     }
-    printf("\n\n\n\t");
-     printChar('*',65);
-    printf("\n\n\t");
-    system("pause");
+    printf("\n\t");
+    printChar('*',65);
+    printf("\n\n\t\tPress Enter to continue...");
+    getchar();
+    getchar();
 }
 
-/* Search Student Records */
 void searchRecord(FILE *fp)
 {
     printHead();
+    int tempRoll,flag=0,siz,i;
+    Student s;
+    char another='y';
 
-int tempRoll,flag,siz,i;
-Student s;
-char another='y';
+    siz=sizeof(s);
 
-siz=sizeof(s);
-
-while(another=='y'||another=='Y')
-  {
-  printf("\n\n\tEnter Identification Number of Student to search the record : ");
-  scanf("%d",&tempRoll);
-
-rewind(fp);
-
-while((fread(&s,siz,1,fp))==1)
-{
-    if(s.ID==tempRoll)
-        {flag=1;
-        break;
-        }
-}
-if(flag==1)
+    while(another=='y'||another=='Y')
     {
-        printf("\n\t\tNAME : %s",s.name);
-        printf("\n\t\tDATE OF BIRTH:%s",s.dob);
-        printf("\n\t\tADDRESS: %s",s.address);
-        printf("\n\t\tIDENTICATION DOCUMENT NO.: %d",s.ID);
-        printf("\n\t\tPHONE NUMBER:%s",s.ph);
-        printf("\n\t\tGURDAIN NAME:%s",s.gname);
-        printf("\n\t\tEMAIL OF STUDENT:%s",s.email);
-        printf("\n\t\tGURDAIN PHONE NUMBER:%s",s.gph);
+        printf("\n\n\tEnter Identification Number to search: ");
+        scanf("%d",&tempRoll);
 
-     }
-else printf("\n\n\t\t!!!! ERROR RECORD NOT FOUND !!!!");
-printf("\n");
-printChar('~',65);
-printf("\n\n\t\tWant to enter another search (Y/N)");
-fflush(stdin);
-another=getch();
-  }
+        rewind(fp);
+        while((fread(&s,siz,1,fp))==1)
+        {
+            if(s.ID==tempRoll)
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1)
+        {
+            printf("\n\t\tNAME            : %s", s.name);
+            printf("\n\t\tDATE OF BIRTH   : %s", s.dob);
+            printf("\n\t\tADDRESS         : %s", s.address);
+            printf("\n\t\tID NUMBER       : %d", s.ID);
+            printf("\n\t\tPHONE NUMBER    : %s", s.ph);
+            printf("\n\t\tGUARDIAN NAME   : %s", s.gname);
+            printf("\n\t\tEMAIL ADDRESS   : %s", s.email);
+            printf("\n\t\tGUARDIAN PHONE  : %s", s.gph);
+            if(s.n!=0) printf("\n\t\tRANK           : %d", s.rank);
+        }
+        else
+            printf("\n\n\t\t!!!! ERROR: RECORD NOT FOUND !!!!");
+
+        printf("\n");
+        printChar('~',65);
+        printf("\n\n\t\tSearch another record? (Y/N): ");
+        fflush(stdin);
+        another=getch();
+    }
+}
+
+/* Welcome Animation */
+void welcomeAnimation() {
+    int i, j;
+    system("clear");
+    for(i = 0; i < 3; i++) {
+        system("clear");
+        printf("\n\n\n");
+        printf("\t\t\t┌──────────────────────────────────────┐\n");
+        printf("\t\t\t│                                      │\n");
+        printf("\t\t\t│      Welcome to EMS %c               │\n", i % 2 ? '*' : '+');
+        printf("\t\t\t│                                      │\n");
+        printf("\t\t\t│      Entrance Management System      │\n");
+        printf("\t\t\t│                                      │\n");
+        printf("\t\t\t└──────────────────────────────────────┘\n");
+        sleep(1);
+    }
+    printf("\n\n\t\t\tLoading");
+    for(i = 0; i < 3; i++) {
+        for(j = 0; j < 3; j++) {
+            printf(".");
+            fflush(stdout);
+            usleep(200000); // 200ms delay
+        }
+        printf("\b\b\b   \b\b\b");
+        fflush(stdout);
+    }
+}
+
+/* Exit Animation */
+void exitAnimation() {
+    int i;
+    system("clear");
+    printf("\n\n\n");
+    printf("\t\t\t┌──────────────────────────────────────┐\n");
+    printf("\t\t\t│                                      │\n");
+    printf("\t\t\t│    Thank You for Using EMS!          │\n");
+    printf("\t\t\t│                                      │\n");
+    printf("\t\t\t│         See You Next Time!           │\n");
+    printf("\t\t\t│                                      │\n");
+    printf("\t\t\t└──────────────────────────────────────┘\n");
+
+    printf("\n\n\t\t\t");
+    for(i = 0; i < 3; i++) {
+        printf("\rExiting   ");
+        fflush(stdout);
+        usleep(300000);
+        printf("\rExiting.  ");
+        fflush(stdout);
+        usleep(300000);
+        printf("\rExiting.. ");
+        fflush(stdout);
+        usleep(300000);
+        printf("\rExiting...");
+        fflush(stdout);
+        usleep(300000);
+    }
+    system("clear");
 }

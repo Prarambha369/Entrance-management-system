@@ -1,79 +1,91 @@
-
-# ENTRANCE-MANAGEMENT-SYSTEM
+# Entrance Management System
 
 ## Overview
-The ENTRANCE-MANAGEMENT-SYSTEM is a C language-based program designed to streamline the management of entrance exams for universities, colleges, and jobs. The program helps store and manage candidate data, minimize errors, and ensure a smooth, accurate, and fast process for exam results and candidate selection.
-## Key Objectives:
-- Data Management: Store candidate data based on their submitted forms.
-- Candidate Selection: Select qualified candidates for universities, colleges, and job applications.
-- Error Reduction: Minimize errors and prevent corruption in the selection process.
-- Efficiency: Maximize accuracy and speed when publishing results.
+The Entrance Management System is a C-based application for managing entrance examinations, student records, and results. Built for educational institutions, it provides a complete solution for conducting entrance tests and managing candidate data.
 
+## Features
 
-## Features:
-- Form Publishing: Publishes and collects candidate information for validation.
-- Data Storage: Stores candidate information for future use.
-- Data Modification: Allows candidates to modify their details before the exam.
-- Candidate Withdrawal: Candidates can withdraw their application by deleting their data.
-- Timed Exam: A 20-minute entrance exam with a total score of 10 marks.
-- Question Format: Displays 10 questions, each worth 1 mark, with a 10% negative marking per incorrect answer.
-- Final Submission Lock: Once submitted, the answers cannot be modified.
-- Instant Results: Displays the candidate’s marks immediately after submission.
-- Ranked Results: Displays rank-wise results once all candidates have completed the exam.
+### Student Management
+- Student registration with comprehensive data collection
+- Profile modification system
+- Student record search and display
+- Secure ID-based authentication
+
+### Examination System
+- Real-time entrance examination
+- Random question generation
+- Multiple choice format (A, B, C, D)
+- Skip option available ('S' key)
+- Negative marking system (10% deduction for wrong answers)
+- Instant result generation
+
+### Result Management
+- Automatic scoring system
+- Rank generation
+- Result viewing by ID
+- Complete result listings
+
+## Technical Requirements
+- C compiler (GCC recommended)
+- Standard C libraries
+- Terminal/Command prompt support
+- Minimum 512MB RAM
+- 10MB free disk space
 
 ## Installation
 
-1. Prerequisites:
-
-- Install a C compiler (e.g., gcc for Linux/Mac or MinGW for Windows).
-
-- Ensure your system is set up to run C programs.
-
--  Clone the Repository: Clone the project repository to your local machine using:
-
-
+1. Clone the repository:
 ```bash
- git clone https://github.com/heyitsprashant/Entrance-management-system
-
+git clone https://github.com/Prarambha369/Entrance-management-system.git
 ```
-3. Compile the Program: Navigate to the project directory and compile the program with the following command:
 
+2. Navigate to project directory:
+```bash
+cd Entrance-management-system
 ```
-gcc -o entrance_management_system entrance_management_system.c
+
+3. Compile the program:
+```bash
+gcc -o program 'Final code.c'
 ```
-4. Run the Program: After compiling, you can run the program by executing:
 
+4. Run the application:
+```bash
+./program
 ```
-./entrance_management_system
-```
-5. Dependencies: This program does not require any external libraries or dependencies beyond a C compiler.
 
-## Usage/Examples
+## Usage Guide
 
-Once the program is running, it will guide the user through the entrance exam process. Candidates will:
+### For Administrators
+1. Launch the program
+2. Choose options from the main menu:
+   - Option 1: Register new students
+   - Option 2: Modify student records
+   - Option 4: View all records
+   - Option 6: View rankings
 
-- Submit their personal information through a form.
-- Be presented with 10 questions.
-- Submit their answers for evaluation.
-- Receive instant feedback on their score, including any deductions for incorrect answers.
-- After all candidates have completed the exam, a rank-wise result list will be displayed.
+### For Students
+1. Register using Option 1
+2. Note down your ID number
+3. Take exam using Option 3
+4. View results immediately after completion
+5. Check rankings using Option 6
 
+## Key Features
+- **Secure Storage**: All student data is stored locally
+- **User-Friendly Interface**: Simple menu-driven system
+- **Real-Time Processing**: Instant result calculation
+- **Data Persistence**: Records maintained between sessions
 
 ## Contributing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to your branch
+5. Create a Pull Request
 
-If you'd like to contribute to this project, follow these steps:
-
-- Fork the repository.
-- Create a new feature branch (`git checkout -b feature-branch`).
-* Commit your changes (`git commit -m 'Add new feature'`).
-* Push to the branch (`git push origin feature-branch`).
-* Submit a Pull Request.
-
+## Author
+- Prarambha Bashyal
 
 ## License
-
-
-This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for more information.
-
-
-
+This project is licensed under the MIT License - see the LICENSE file for details.
