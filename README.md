@@ -1,98 +1,79 @@
-# Entrance Management System
 
-A comprehensive entrance examination management system for educational institutions.
+# ENTRANCE-MANAGEMENT-SYSTEM
 
-## Features
+## Overview
+The ENTRANCE-MANAGEMENT-SYSTEM is a C language-based program designed to streamline the management of entrance exams for universities, colleges, and jobs. The program helps store and manage candidate data, minimize errors, and ensure a smooth, accurate, and fast process for exam results and candidate selection.
+## Key Objectives:
+- Data Management: Store candidate data based on their submitted forms.
+- Candidate Selection: Select qualified candidates for universities, colleges, and job applications.
+- Error Reduction: Minimize errors and prevent corruption in the selection process.
+- Efficiency: Maximize accuracy and speed when publishing results.
 
-- User authentication (Admin, Examiner, Student roles)
-- Student registration and management
-- Entrance exam administration
-- QR code check-in system
-- Reporting and statistics
-- Backup and restore functionality
 
-## Requirements
-
-- C Compiler (GCC recommended)
-- Make
-- Linux/Unix or Windows with MinGW
+## Features:
+- Form Publishing: Publishes and collects candidate information for validation.
+- Data Storage: Stores candidate information for future use.
+- Data Modification: Allows candidates to modify their details before the exam.
+- Candidate Withdrawal: Candidates can withdraw their application by deleting their data.
+- Timed Exam: A 20-minute entrance exam with a total score of 10 marks.
+- Question Format: Displays 10 questions, each worth 1 mark, with a 10% negative marking per incorrect answer.
+- Final Submission Lock: Once submitted, the answers cannot be modified.
+- Instant Results: Displays the candidate’s marks immediately after submission.
+- Ranked Results: Displays rank-wise results once all candidates have completed the exam.
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd Entrance-management-system
-   ```
+1. Prerequisites:
 
-2. Build the project:
-   ```bash
-   make
-   ```
+- Install a C compiler (e.g., gcc for Linux/Mac or MinGW for Windows).
 
-3. Run the application:
-   ```bash
-   ./ems
-   ```
+- Ensure your system is set up to run C programs.
 
-## Default Credentials
+-  Clone the Repository: Clone the project repository to your local machine using:
 
-- **Admin**:
-  - Username: admin
-  - Password: admin123
 
-## Project Structure
+```bash
+ git clone https://github.com/heyitsprashant/Entrance-management-system
 
 ```
-Entrance-management-system/
-├── include/           # Header files
-│   ├── common.h       # Common includes and definitions
-│   ├── student.h      # Student management
-│   ├── user.h         # User authentication
-│   └── exam.h         # Exam functionality
-├── src/               # Source files
-│   ├── main.c         # Entry point
-│   ├── student.c      # Student operations
-│   ├── user.c         # User management
-│   ├── exam.c         # Exam logic
-│   └── utils.c        # Utility functions
-├── data/              # Data storage
-├── backups/           # Backup files
-├── reports/           # Generated reports
-└── Makefile           # Build configuration
-Enter ID: 123
-Record added successfully!
+3. Compile the Program: Navigate to the project directory and compile the program with the following command:
+
 ```
+gcc -o entrance_management_system entrance_management_system.c
+```
+4. Run the Program: After compiling, you can run the program by executing:
 
-## Available Commands
+```
+./entrance_management_system
+```
+5. Dependencies: This program does not require any external libraries or dependencies beyond a C compiler.
 
-The following commands are available in the main menu:
+## Usage/Examples
 
-Command          | Description                           | Required Role
-----------------|---------------------------------------|---------------
-login           | Logout and login as different user    | Any
-add-user        | Add a new user account               | Admin
-add-student     | Register a new student               | Admin/Examiner
-list-students   | View all students                    | Any
-search-student  | Search for a student                 | Any
-start-exam      | Begin your entrance exam             | Student
-view-results    | View your exam results               | Any
-rankings        | See student rankings                 | Any
-backup-csv      | Export data to CSV                   | Admin
-backup-binary   | Create a binary backup               | Admin
-generate-report | Generate exam report                 | Admin/Examiner
-view-logs       | View system logs                     | Admin
-system-settings | Change system configuration          | Admin
-help            | Show help                            | Any
-about           | About this system                    | Any
-logout          | Logout                               | Any
-exit           | Exit the program                      | Any
+Once the program is running, it will guide the user through the entrance exam process. Candidates will:
+
+- Submit their personal information through a form.
+- Be presented with 10 questions.
+- Submit their answers for evaluation.
+- Receive instant feedback on their score, including any deductions for incorrect answers.
+- After all candidates have completed the exam, a rank-wise result list will be displayed.
+
 
 ## Contributing
-Contributions are welcome! Please fork the repository and submit a pull request. For major changes, open an issue first to discuss your ideas.
+
+If you'd like to contribute to this project, follow these steps:
+
+- Fork the repository.
+- Create a new feature branch (`git checkout -b feature-branch`).
+* Commit your changes (`git commit -m 'Add new feature'`).
+* Push to the branch (`git push origin feature-branch`).
+* Submit a Pull Request.
+
 
 ## License
-See [LICENSE](LICENSE) for details.
 
-## Author
-Maintained by mrbashyal. For questions, contact via GitHub.
+
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for more information.
+
+
+
