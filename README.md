@@ -1,45 +1,65 @@
 # Entrance Management System
 
-A simple C-based Entrance Management System for managing and searching records. This project demonstrates basic file operations, record management, and sorting in C.
-
-## Project Overview
-This system allows users to add, search, and sort entrance records via a command-line interface. It is ideal for learning basic C programming concepts, file handling, and data manipulation.
+A comprehensive entrance examination management system for educational institutions.
 
 ## Features
-- Add, search, and sort records (by name or ID)
-- Simple command-line interface
-- Persistent data storage using files
-- Input validation and error handling
 
-## Files
-- `run.c`: Main program logic
+- User authentication (Admin, Examiner, Student roles)
+- Student registration and management
+- Entrance exam administration
+- QR code check-in system
+- Reporting and statistics
+- Backup and restore functionality
 
-## Prerequisites
-- GCC compiler (tested on Linux)
+## Requirements
 
-## Build Instructions
-1. Make sure you have GCC installed.
-2. Compile the program:
-   ```sh
-   gcc run.c -o entrance-management
+- C Compiler (GCC recommended)
+- Make
+- Linux/Unix or Windows with MinGW
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd Entrance-management-system
    ```
-3. Run the program:
-   ```sh
-   ./entrance-management
+
+2. Build the project:
+   ```bash
+   make
    ```
 
-## Usage
-Follow the on-screen menu to add, search, or sort records.
+3. Run the application:
+   ```bash
+   ./ems
+   ```
 
-### Example
+## Default Credentials
+
+- **Admin**:
+  - Username: admin
+  - Password: admin123
+
+## Project Structure
+
 ```
---- Entrance Management System ---
-1. Add Record
-2. Search Record
-3. Sort Records
-4. Exit
-Enter your choice: 1
-Enter Name: John Doe
+Entrance-management-system/
+├── include/           # Header files
+│   ├── common.h       # Common includes and definitions
+│   ├── student.h      # Student management
+│   ├── user.h         # User authentication
+│   └── exam.h         # Exam functionality
+├── src/               # Source files
+│   ├── main.c         # Entry point
+│   ├── student.c      # Student operations
+│   ├── user.c         # User management
+│   ├── exam.c         # Exam logic
+│   └── utils.c        # Utility functions
+├── data/              # Data storage
+├── backups/           # Backup files
+├── reports/           # Generated reports
+└── Makefile           # Build configuration
 Enter ID: 123
 Record added successfully!
 ```
