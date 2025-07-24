@@ -4,9 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-// Global variables
-User current_user;
-bool is_logged_in = false;
+// Global variables are declared extern in common.h and defined in main.c
 
 bool login() {
     char username[MAX_USERNAME];
@@ -91,7 +89,7 @@ void change_password() {
         return;
     }
     
-    printf("\n\t\tNew Password: ");
+    printf("\n\t\tNew Password (min 4 chars): ");
     secure_password_input(new_pass, MAX_PASSWORD);
     
     printf("\n\t\tConfirm New Password: ");
@@ -105,7 +103,16 @@ void change_password() {
         getch();
         return;
     }
-    
+
+    if (strlen(new_pass) < 4) {
+        set_color(COLOR_RED);
+        printf("\n\t\tPassword too short! Must be at least 4 characters.");
+        set_color(COLOR_RESET);
+        printf("\n\t\tPress any key to return...");
+        getch();
+        return;
+    }
+
     // Update password in file
     FILE *user_fp = safe_open(USER_FILE, "r+b");
     if (user_fp) {
@@ -136,4 +143,54 @@ void change_password() {
     getch();
 }
 
-// Add other user management functions here...
+void manage_users(void) {
+    print_header();
+    printf("\n\n\t\tUSER MANAGEMENT");
+    printf("\n\t\t--------------");
+
+    printf("\n\n\t\t1. Add New User");
+    printf("\n\t\t2. List Users");
+    printf("\n\t\t3. Edit User");
+    printf("\n\t\t4. Delete User");
+    printf("\n\t\t0. Back");
+
+    int choice = get_menu_choice(0, 4);
+
+    switch (choice) {
+        case 1:
+            // TODO: Implement add_new_user()
+            printf("\n\t\tAdding new user...");
+            break;
+        case 2:
+            // TODO: Implement list_users()
+            printf("\n\t\tListing users...");
+            break;
+        case 3:
+            // TODO: Implement edit_user()
+            printf("\n\t\tEditing user...");
+            break;
+        case 4:
+            // TODO: Implement delete_user()
+            printf("\n\t\tDeleting user...");
+            break;
+    }
+}
+
+void view_logs(void) {
+    print_header();
+    printf("\n\n\t\tSYSTEM LOGS");
+    printf("\n\t\t-----------");
+
+    FILE *fp = safe_open(LOG_FILE, "r");
+    if (!fp) {
+        printf("\n\t\tNo logs found.");
+        return;
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), fp)) {
+        printf("\n\t\t%s", line);
+    }
+
+    fclose(fp);
+}

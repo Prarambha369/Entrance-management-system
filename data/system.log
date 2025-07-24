@@ -1,32 +1,11 @@
-[2025-07-24 11:25:08] INFO: Created directory: data
-[2025-07-24 11:25:08] INFO: Created directory: backups
-[2025-07-24 11:25:08] INFO: Created directory: reports
 
 
-[2025-07-24 11:25:08] ---------- SYSTEM STARTED ----------
-[2025-07-24 11:25:08] INFO: System initializing
-[2025-07-24 11:25:08] INFO: First run detected. Setting up system.
-[2025-07-24 11:25:08] INFO: Default admin account created
-[2025-07-24 11:25:08] INFO: System configuration saved
+=== Logging started at 2025-07-24 13:34:15 ===
+[2025-07-24 13:34:15] [INFO] Application started
+[2025-07-24 13:34:15] [ERROR] Failed to open file: data/config.dat (mode: rb)
+[2025-07-24 13:34:48] [INFO] First-time setup completed
 
 
-[2025-07-24 11:39:39] ---------- SYSTEM STARTED ----------
-[2025-07-24 11:39:39] INFO: System initializing
-[2025-07-24 11:40:09] INFO: User logged in: admin (Role: Administrator)
-[2025-07-24 11:40:22] ERROR: Error opening file data/student.dat: No such file or directory
-[2025-07-24 11:41:11] INFO: QR code generated for student ID 1234
-[2025-07-24 11:41:11] INFO: New student registered - ID: 1234, Name: Prarambha
-[2025-07-24 11:43:55] INFO: QR code generated for student ID 1234
-[2025-07-24 11:44:10] INFO: Student checked in: ID=1234, Name=Prarambha
-[2025-07-24 11:44:21] INFO: Student checked in: ID=1234, Name=Prarambha
-[2025-07-24 11:44:34] INFO: QR code generated for student ID 1234
-
-
-[2025-07-24 11:45:48] ---------- SYSTEM STARTED ----------
-[2025-07-24 11:45:48] INFO: System initializing
-[2025-07-24 11:46:07] INFO: User logged in: admin (Role: Administrator)
-[2025-07-24 11:46:25] INFO: System configuration saved
-[2025-07-24 11:46:29] INFO: System configuration saved
-[2025-07-24 11:46:39] INFO: System configuration saved
-[2025-07-24 11:46:42] INFO: System configuration saved
-[2025-07-24 11:47:03] INFO: System configuration saved
+=== Logging started at 2025-07-24 13:35:04 ===
+[2025-07-24 13:35:04] [INFO] Application started
+[2025-07-24 13:35:09] [INFO] User logged in: hiji

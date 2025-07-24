@@ -3,11 +3,7 @@
 #include "../include/user.h"
 #include "../include/student.h"
 #include "../include/exam.h"
-
-// Global variables are now declared in common.h with extern
-// and defined here with the MAIN_FILE macro
-User current_user = {0};
-bool is_logged_in = false;
+#include "../include/input_utils.h"
 
 int main() {
     // Initialize system directories
@@ -22,11 +18,16 @@ int main() {
     // Load system configuration
     SystemConfig config = load_system_config();
     
-    // First run setup
-    if (config.first_run) {
+    // Check if this is first run by looking for user file
+    if (!FILE_EXISTS(USER_FILE)) {
         show_documentation();
         config.first_run = false;
         save_system_config(config);
+        log_message(LOG_INFO, "First-time setup completed");
+        printf("\n\n\t\tSetup complete! Please restart the application to login.");
+        printf("\n\t\tPress any key to exit...");
+        getch();
+        return 0;
     }
     
     // Main application loop
@@ -38,23 +39,9 @@ int main() {
             }
         }
         
-        // Route to appropriate panel based on user role
+        // Single menu system for all user types
         if (is_logged_in) {
-            switch (current_user.role) {
-                case ROLE_ADMIN:
-                    admin_panel();
-                    break;
-                case ROLE_EXAMINER:
-                    // examiner_panel();
-                    break;
-                case ROLE_USER:
-                    user_panel();
-                    break;
-                default:
-                    log_message(LOG_ERROR, "Unknown user role: %d", current_user.role);
-                    is_logged_in = false;
-                    break;
-            }
+            user_panel();  // This now handles all user types with proper access control
         }
     }
     
