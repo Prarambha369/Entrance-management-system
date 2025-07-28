@@ -10,12 +10,12 @@
 #define MAX_OPTION_LENGTH 100
 #define MAX_QUESTIONS_PER_PAPER 100
 
-typedef struct {
+typedef struct Option {
     char text[MAX_OPTION_LENGTH];
     bool is_correct;
 } Option;
 
-typedef struct {
+typedef struct Question {
     int question_id;
     char text[MAX_QUESTION_TEXT];
     Option options[4];  // Assuming 4 options per question

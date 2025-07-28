@@ -72,7 +72,7 @@
 typedef struct User User;
 typedef struct SystemConfig SystemConfig;
 typedef struct Student Student;
-typedef struct Question Question;
+// Forward declaration for Question is now in exam.h
 
 // System configuration structure
 struct SystemConfig {
